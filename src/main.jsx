@@ -1,25 +1,70 @@
-import React, {useEffect,useMemo,useState} from 'react';
+import React,{useEffect,useMemo,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {MapContainer,TileLayer,Marker,Popup} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './style.css';
-// Leaflet marker icons must use the Vite base path rather than relative asset URLs.
-const pin = L.divIcon({html:'<span class="pin">🌳</span>',className:'',iconSize:[30,30],iconAnchor:[15,15]});
-const tabs=[['dashboard','ภาพรวม'],['trees','ทะเบียนต้นไม้'],['map','แผนที่'],['staff','เจ้าหน้าที่']];
+
+const pin=L.divIcon({html:'<span class="pin">🌳</span>',className:'',iconSize:[30,30],iconAnchor:[15,15]});
+const menu=[
+ ['dashboard','⌂','ภาพรวม (Dashboard)'],
+ ['trees','♣','ทะเบียนต้นไม้'],
+ ['work','▤','ใบงาน'],
+ ['activity','▣','กิจกรรม / ประวัติ'],
+ ['map','♧','แผนที่ต้นไม้'],
+ ['reports','▥','รายงาน'],
+ ['staff','⚙','เจ้าหน้าที่ / ตั้งค่า']
+];
+const fmt=n=>Number(n||0).toLocaleString('th-TH');
 function App(){
- const [page,setPage]=useState('dashboard'),[trees,setTrees]=useState([]),[error,setError]=useState(''),[query,setQuery]=useState(''),[selected,setSelected]=useState(null);
- useEffect(()=>{fetch(`${import.meta.env.BASE_URL}data/trees.json`,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return r.json()}).then(data=>{if(!Array.isArray(data))throw Error('ข้อมูลต้องเป็น array');setTrees(data)}).catch(e=>setError(`โหลดข้อมูลไม่ได้: ${e.message}`))},[]);
- const filtered=useMemo(()=>trees.filter(t=>[t.tree_uid,t.tree_id,t.species,t.area_id].some(x=>String(x||'').toLowerCase().includes(query.toLowerCase()))),[trees,query]);
- const mapped=filtered.filter(t=>Number.isFinite(Number(t.latitude))&&Number.isFinite(Number(t.longitude))&&t.latitude!==''&&t.longitude!=='');
+ const [page,setPage]=useState('dashboard'),[trees,setTrees]=useState([]),[error,setError]=useState(''),[query,setQuery]=useState(''),[selected,setSelected]=useState(null),[menuOpen,setMenuOpen]=useState(false);
+ useEffect(()=>{fetch(import.meta.env.BASE_URL+'data/trees.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{if(!Array.isArray(data))throw Error('รูปแบบข้อมูลไม่ถูกต้อง');setTrees(data)}).catch(e=>setError('โหลดข้อมูลไม่ได้: '+e.message))},[]);
+ const filtered=useMemo(()=>trees.filter(t=>[t.tree_uid,t.tree_id,t.species,t.area_id].some(x=>String(x||'').toLowerCase().includes(query.trim().toLowerCase()))),[trees,query]);
+ const validGeo=t=>t.latitude!==''&&t.longitude!==''&&t.latitude!=null&&t.longitude!=null&&Number.isFinite(Number(t.latitude))&&Number.isFinite(Number(t.longitude))&&Math.abs(Number(t.latitude))<=90&&Math.abs(Number(t.longitude))<=180;
+ const mapped=filtered.filter(validGeo);
  const areas=new Set(trees.map(t=>t.area_id).filter(Boolean)).size;
+ const speciesCount=useMemo(()=>{const counts={};trees.forEach(t=>{const s=String(t.species||'ไม่ระบุชนิด').trim();counts[s]=(counts[s]||0)+1});return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8)},[trees]);
  const staffUrl=import.meta.env.VITE_STAFF_APP_URL;
- return <div className="app"><header><div className="brand"><img className="brand-logo" src={`${import.meta.env.BASE_URL}cnmi-logo.png`} alt="CNMI Ramathibodi" /><div className="brand-copy"><h1>CNMI Tree</h1><p>ทะเบียนและการจัดการต้นไม้ • ข้อมูลสาธารณะ</p></div></div><span className="version">v0.1</span></header><nav>{tabs.map(([id,label])=><button key={id} className={page===id?'active':''} onClick={()=>{setPage(id);setSelected(null)}}>{label}</button>)}</nav><main>
- {error&&<p className="error">{error}</p>}
- {page==='dashboard'&&<><h2>ภาพรวมทะเบียนต้นไม้</h2><section className="stats"><article><strong>{trees.length.toLocaleString('th-TH')}</strong><span>ต้นในชุดข้อมูลเผยแพร่</span></article><article><strong>{areas}</strong><span>พื้นที่</span></article><article><strong>{trees.filter(t=>t.latitude!==''&&t.longitude!==''&&Number.isFinite(Number(t.latitude))&&Number.isFinite(Number(t.longitude))).length}</strong><span>ต้นที่มีพิกัด</span></article></section><div className="notice">ข้อมูลในเว็บนี้เป็นข้อมูลที่อนุมัติให้เผยแพร่เท่านั้น ไม่ใช่ทะเบียนภายในทั้งหมด และอาจอัปเดตเป็นรอบ</div>{trees.length===0&&<p>ยังไม่ได้เชื่อมข้อมูลจริง กรุณาจัดทำชุดข้อมูลเผยแพร่ก่อน</p>}</>}
- {page==='trees'&&<><h2>ค้นหาต้นไม้</h2><input aria-label="ค้นหาต้นไม้" placeholder="ค้นหา Tree_UID, Tree_ID, ชนิด หรือพื้นที่" value={query} onChange={e=>setQuery(e.target.value)}/><p>{filtered.length} รายการ</p>{selected?<article className="detail"><button onClick={()=>setSelected(null)}>← กลับสู่รายการ</button><h3>{selected.species||'ไม่ระบุชนิด'}</h3><p><b>Tree_UID:</b> {selected.tree_uid}</p><p><b>Tree_ID:</b> {selected.tree_id}</p><p><b>พื้นที่:</b> {selected.area_id||'ไม่ระบุ'}</p><p><b>ความสูง:</b> {selected.height_m??'ไม่ระบุ'} เมตร</p><p>ประวัติการดูแลจะเชื่อมในระยะถัดไป</p></article>:<div className="list">{filtered.map(t=><button key={t.tree_uid} className="tree" onClick={()=>setSelected(t)}><b>{t.species||'ไม่ระบุชนิด'}</b><span>{t.tree_id}</span><small>{t.tree_uid} · {t.area_id||'—'}</small></button>)}</div>}</>}
- {page==='map'&&<><h2>แผนที่ต้นไม้</h2><input aria-label="กรองแผนที่" placeholder="กรองรหัส ชนิด หรือพื้นที่" value={query} onChange={e=>setQuery(e.target.value)}/>{mapped.length?<div className="map"><MapContainer key={mapped[0].tree_uid} center={[Number(mapped[0].latitude),Number(mapped[0].longitude)]} zoom={16} scrollWheelZoom={false} style={{height:'100%',width:'100%'}}><TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>{mapped.map(t=><Marker key={t.tree_uid} icon={pin} position={[Number(t.latitude),Number(t.longitude)]}><Popup><b>{t.species||'ต้นไม้'}</b><br/>{t.tree_id}<br/>{t.tree_uid}</Popup></Marker>)}</MapContainer></div>:<div className="notice">ยังไม่มีพิกัดต้นไม้ที่อนุญาตให้เผยแพร่</div>}</>}
- {page==='staff'&&<><h2>ระบบเจ้าหน้าที่</h2><p>การบันทึกกิจกรรม การย้ายปลูก และคำสั่งงาน จะทำผ่าน Google Apps Script Web App ที่จำกัดสิทธิ์การเข้าถึง</p>{staffUrl?<a className="cta" href={staffUrl} target="_blank" rel="noopener noreferrer">เปิดระบบบันทึกสำหรับเจ้าหน้าที่ ↗</a>:<div className="notice">ยังไม่ได้กำหนดลิงก์ Apps Script Web App กรุณาตั้งค่า VITE_STAFF_APP_URL หลังติดตั้งระบบที่ตรวจสอบสิทธิ์แล้ว</div>}<p className="muted">ปุ่มหรือลิงก์บน GitHub Pages ไม่ใช่ระบบป้องกันการเข้าถึง สิทธิ์ต้องตรวจสอบใน Apps Script ฝั่งเซิร์ฟเวอร์</p></>}
- </main><footer>CNMI Tree • Prototype v0.1 • Public read-only portal</footer></div>
+ const go=p=>{setPage(p);setSelected(null);setMenuOpen(false)};
+ return <div className="shell">
+ <aside className={'sidebar '+(menuOpen?'open':'')}>
+  <div className="side-brand"><img src={import.meta.env.BASE_URL+'cnmi-logo.png'} alt="CNMI RAMATHIBODI" /><div className="side-brand-name">CNMI <span>Tree</span></div><small>Tree Management System</small></div>
+  <div className="side-nav">{menu.map(([id,ico,label])=><button key={id} className={page===id?'selected':''} onClick={()=>go(id)}><span className="nav-icon">{ico}</span><span>{label}</span></button>)}</div>
+  <div className="side-bottom"><span>🌿 CNMI Tree</span><small>Public information portal</small><small>Prototype v0.2</small></div>
+ </aside>
+ {menuOpen&&<button className="overlay" aria-label="ปิดเมนู" onClick={()=>setMenuOpen(false)} />}
+ <div className="workspace">
+  <header className="topbar"><button className="hamburger" onClick={()=>setMenuOpen(true)} aria-label="เปิดเมนู">☰</button><div className="top-title"><span className="leaf-mark">🌿</span><div><div className="title-line"><h1>CNMI Tree</h1><span>ระบบบริหารจัดการต้นไม้ <em>(Tree Management System)</em></span></div><p>งานกายภาพและสิ่งแวดล้อม · สถาบันการแพทย์จักรีนฤบดินทร์</p></div></div><div className="sync"><span>↻</span><div>ข้อมูลเผยแพร่<small>จากชุดข้อมูลสาธารณะ</small></div></div></header>
+  <main className="content">
+  {error&&<div className="error">{error}</div>}
+  {page==='dashboard'&&<>
+   <div className="page-heading"><div><h2>ภาพรวมทะเบียนต้นไม้</h2><p>ข้อมูลสรุปจากชุดข้อมูลที่อนุญาตให้เผยแพร่</p></div><span className="status-tag">● Public dashboard</span></div>
+   <section className="kpi-grid">
+    <article className="kpi"><span className="kpi-icon">🌳</span><span>จำนวนต้นไม้ในชุดเผยแพร่</span><strong>{fmt(trees.length)}</strong><small>ต้น</small></article>
+    <article className="kpi"><span className="kpi-icon">☑</span><span>พื้นที่ที่มีข้อมูล</span><strong>{fmt(areas)}</strong><small>พื้นที่</small></article>
+    <article className="kpi"><span className="kpi-icon">⌖</span><span>ต้นไม้ที่มีพิกัด</span><strong>{fmt(trees.filter(validGeo).length)}</strong><small>ต้น</small></article>
+    <article className="kpi"><span className="kpi-icon">🌿</span><span>ชนิดต้นไม้ที่บันทึก</span><strong>{fmt(new Set(trees.map(t=>t.species).filter(Boolean)).size)}</strong><small>ชนิด</small></article>
+   </section>
+   <section className="dashboard-grid">
+    <article className="panel"><div className="panel-title"><h3>🌿 จำนวนต้นไม้ตามชนิด (Top 8)</h3><span>ข้อมูลจริง</span></div>{speciesCount.length?<div className="bars">{speciesCount.map(([name,n])=><div className="bar-row" key={name}><span title={name}>{name}</span><div className="bar-track"><div style={{width:(n/speciesCount[0][1]*100)+'%'}} /></div><b>{fmt(n)}</b></div>)}</div>:<Empty icon="🌱" title="ยังไม่มีข้อมูลชนิดต้นไม้" desc="รอเชื่อมชุดข้อมูลที่อนุญาตให้เผยแพร่จาก CNMI Tree Master" />}</article>
+    <article className="panel"><div className="panel-title"><h3>🌱 สถานะสุขภาพต้นไม้</h3><span>เตรียมเชื่อมระบบประเมิน</span></div><Empty icon="◎" title="ยังไม่มีผลการประเมิน" desc="กราฟสัดส่วนสุขภาพจะแสดงเมื่อมีข้อมูล Tree Health ที่ตรวจสอบแล้ว" /></article>
+    <article className="panel"><div className="panel-title"><h3>▤ ใบงาน (Work Order)</h3><span>ระบบเจ้าหน้าที่</span></div><Empty icon="📋" title="ยังไม่เชื่อมใบงาน" desc="จะเชื่อมกับ Work_Order และ Work_Order_Trees ในระยะถัดไป" /><button className="text-action" onClick={()=>go('work')}>ดูโครงสร้างใบงาน →</button></article>
+   </section>
+   <section className="bottom-grid">
+    <article className="panel"><div className="panel-title"><h3>🌿 การกักเก็บคาร์บอนสะสม</h3><span>ระยะต่อไป</span></div><Empty icon="CO₂" title="รอข้อมูลการคำนวณ" desc="ไม่แสดงค่าประมาณจนกว่าจะกำหนดวิธีคำนวณและตรวจสอบข้อมูล" /></article>
+    <article className="panel"><div className="panel-title"><h3>▣ กิจกรรมล่าสุด</h3><span>Activity Log</span></div><Empty icon="📷" title="ยังไม่มีรายการกิจกรรมเผยแพร่" desc="ภาพถ่ายและประวัติการดูแลจะแสดงเมื่อมีระบบคัดกรองข้อมูลสาธารณะ" /></article>
+   </section>
+   <p className="data-note">ⓘ ตัวเลขทั้งหมดบนหน้านี้คำนวณจากไฟล์ข้อมูลสาธารณะ ไม่ใช่จำนวนต้นไม้ทั้งหมดในทะเบียนภายใน และยังไม่ใช่การเชื่อม Google Sheets แบบเรียลไทม์</p>
+  </>}
+  {page==='trees'&&<div className="panel full"><div className="panel-title"><h2>ทะเบียนต้นไม้</h2><span>{fmt(filtered.length)} รายการ</span></div><input placeholder="ค้นหา Tree_UID, Tree_ID, ชนิด หรือพื้นที่" aria-label="ค้นหาต้นไม้" value={query} onChange={e=>setQuery(e.target.value)}/>{selected?<div className="tree-detail"><button className="back" onClick={()=>setSelected(null)}>← กลับสู่รายการ</button><h3>{selected.species||'ไม่ระบุชนิด'}</h3><p><b>Tree_UID:</b> {selected.tree_uid}</p><p><b>Tree_ID:</b> {selected.tree_id}</p><p><b>พื้นที่:</b> {selected.area_id||'ไม่ระบุ'}</p><p><b>ความสูง:</b> {selected.height_m??'ไม่ระบุ'} เมตร</p><p>ประวัติการดูแลจะเชื่อมในระยะถัดไป</p></div>:filtered.length?<div className="tree-list">{filtered.map(t=><button key={t.tree_uid||t.tree_id} onClick={()=>setSelected(t)}><b>{t.species||'ไม่ระบุชนิด'}</b><span>{t.tree_id}</span><small>{t.tree_uid} · {t.area_id||'—'}</small></button>)}</div>:<Empty icon="🌳" title="ยังไม่มีรายการต้นไม้" desc="ข้อมูลจะปรากฏหลังจัดเตรียมชุดข้อมูลสาธารณะ" />}</div>}
+  {page==='map'&&<div className="panel full"><div className="panel-title"><h2>แผนที่ต้นไม้</h2><span>{fmt(mapped.length)} จุด</span></div><input aria-label="ค้นหาแผนที่" placeholder="ค้นหาต้นไม้หรือพื้นที่" value={query} onChange={e=>setQuery(e.target.value)}/>{mapped.length?<div className="map"><MapContainer key={mapped[0].tree_uid||mapped[0].tree_id} center={[Number(mapped[0].latitude),Number(mapped[0].longitude)]} zoom={16} scrollWheelZoom={false} style={{height:'100%',width:'100%'}}><TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>{mapped.map(t=><Marker key={t.tree_uid||t.tree_id} icon={pin} position={[Number(t.latitude),Number(t.longitude)]}><Popup><b>{t.species||'ต้นไม้'}</b><br/>{t.tree_id}<br/>{t.tree_uid}</Popup></Marker>)}</MapContainer></div>:<Empty icon="🗺" title="ยังไม่มีพิกัดต้นไม้สำหรับเผยแพร่" desc="แผนที่จะแสดงข้อมูลจริงหลังผ่านการคัดกรอง" />}</div>}
+  {page==='work'&&<Placeholder title="ใบงาน (Work Order)" icon="📋" desc="เตรียมเชื่อม Work_Order และ Work_Order_Trees จาก CNMI Tree Log พร้อมสถานะการมอบหมายและตรวจรับ" go={go}/>}
+  {page==='activity'&&<Placeholder title="กิจกรรมและประวัติต้นไม้" icon="🗓" desc="เตรียมเชื่อม Activity Log โดยอ้างอิง Tree_UID ถาวร เพื่อรักษาประวัติแม้มีการย้ายปลูก" go={go}/>}
+  {page==='reports'&&<Placeholder title="รายงาน" icon="📊" desc="เตรียมรายงานจำนวนต้นไม้รายพื้นที่ ประวัติการดูแล สุขภาพ และคาร์บอนตามข้อมูลที่ตรวจสอบแล้ว" go={go}/>}
+  {page==='staff'&&<div className="panel full"><h2>เจ้าหน้าที่และการตั้งค่า</h2><p>ส่วนบันทึกข้อมูลจะทำผ่าน Google Apps Script Web App ที่ตรวจสอบสิทธิ์ฝั่งเซิร์ฟเวอร์</p>{staffUrl?<a className="cta" href={staffUrl} target="_blank" rel="noopener noreferrer">เปิดระบบเจ้าหน้าที่ ↗</a>:<div className="data-note">ยังไม่ได้เชื่อม Apps Script Web App (VITE_STAFF_APP_URL)</div>}<p className="muted">GitHub Pages เป็นเว็บสาธารณะ การซ่อนเมนูหรือปุ่มไม่ใช่การควบคุมสิทธิ์เข้าถึง</p></div>}
+  </main><footer>CNMI Tree · Prototype v0.2 · Public read-only portal</footer>
+ </div></div>
 }
+function Empty({icon,title,desc}){return <div className="empty"><div className="empty-icon">{icon}</div><strong>{title}</strong><p>{desc}</p></div>}
+function Placeholder({title,icon,desc,go}){return <div className="panel full"><h2>{title}</h2><Empty icon={icon} title="อยู่ระหว่างพัฒนา" desc={desc}/><button className="text-action" onClick={()=>go('dashboard')}>← กลับภาพรวม</button></div>}
 createRoot(document.getElementById('root')).render(<App/>);
