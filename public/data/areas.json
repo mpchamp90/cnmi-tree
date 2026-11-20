@@ -1,0 +1,134 @@
+{
+  "CNMI": {
+    "name_th": "รอบสถาบันการแพทย์จักรีนฤบดินทร์",
+    "name_en": "CNMI"
+  },
+  "LC": {
+    "name_th": "อาคารศูนย์การเรียนรู้",
+    "name_en": "Learning Resource Center"
+  },
+  "PR": {
+    "name_th": "อาคารพรีคลินิก และ อาคารวิจัย",
+    "name_en": "Pre-clinic and Research Center Building"
+  },
+  "AN": {
+    "name_th": "อาคารกายวิภาคทางคลินิก",
+    "name_en": "Clinical Anatomy Building"
+  },
+  "CC": {
+    "name_th": "อาคารศาลาประชาคม",
+    "name_en": "Community Center"
+  },
+  "HP": {
+    "name_th": "อาคารโรงพยาบาล",
+    "name_en": "Hospital Building"
+  },
+  "PK": {
+    "name_th": "พื้นที่รอบอาคารจอดรถ",
+    "name_en": "Parking"
+  },
+  "RC": {
+    "name_th": "อาคารนันทนาการ",
+    "name_en": "Recreation Center"
+  },
+  "D1": {
+    "name_th": "อาคารหอพัก 1",
+    "name_en": "Dormitory 1"
+  },
+  "D2": {
+    "name_th": "อาคารหอพัก 2",
+    "name_en": "Dormitory 2"
+  },
+  "D3": {
+    "name_th": "อาคารหอพัก 3",
+    "name_en": "Dormitory 3"
+  },
+  "D4": {
+    "name_th": "อาคารหอพัก 4",
+    "name_en": "Dormitory 4"
+  },
+  "D5": {
+    "name_th": "อาคารหอพัก 5",
+    "name_en": "Dormitory 5"
+  },
+  "FC": {
+    "name_th": "อาคารศูนย์อาหาร (ใหม่)",
+    "name_en": "Food Center"
+  },
+  "ES": {
+    "name_th": "อาคารวิศวกรรมบริการ",
+    "name_en": "Engineering Sercive"
+  },
+  "MS": {
+    "name_th": "อาคารซ่อมบำรุง",
+    "name_en": "Maintenance Service Center"
+  },
+  "SB": {
+    "name_th": "อาคารโรงไฟฟ้าย่อย",
+    "name_en": "Electrical Substation"
+  },
+  "WT": {
+    "name_th": "อาคารโรงบำบัดน้ำเสีย",
+    "name_en": "Waste Water Treatment"
+  },
+  "GB": {
+    "name_th": "อาคารโรงพักขยะ",
+    "name_en": "Waste Management"
+  },
+  "LS": {
+    "name_th": "อาคารโรงซักผ้า",
+    "name_en": "Linen Service"
+  },
+  "NS": {
+    "name_th": "พื้นที่เพาะชำต้นไม้",
+    "name_en": "Nursery Station Area"
+  },
+  "NA": {
+    "name_th": "พื้นที่ว่างติดกับอาคารกายวิภาคทางคลินิก",
+    "name_en": "Next to Clinical Anatomy Building"
+  },
+  "R1": {
+    "name_th": "ถนนเส้นด้านหน้าสถาบันฯ - โค้งอาคารกายวิภาค - ศาลาประชาคม - ประตู 2",
+    "name_en": "Front Road (Anatomy – Pavilion – Gate 2)"
+  },
+  "R2": {
+    "name_th": "ถนนเส้นกลางจากโค้งจากประตู 1 ถึง สามแยกศูนย์อาหาร",
+    "name_en": "Central Road (Gate 1 to Food Center Junction)"
+  },
+  "R3": {
+    "name_th": "ถนนเส้นอาคารพรีคลินิก ถึง ประตู 1 ฝั่งขาออก",
+    "name_en": "Pre-clinic to Gate 1 (Exit Lane)"
+  },
+  "R4": {
+    "name_th": "ถนนเส้นด้านหลังโรงพยาบาล ตั้งแต่ประตู 2 ถึง หอพัก 5",
+    "name_en": "Gate 2 – Hospital – Dormitory 5"
+  },
+  "R5": {
+    "name_th": "ถนนเส้นระหว่างประตู 3 - อาคารศูนย์อาหาร - หอพัก 5",
+    "name_en": "Gate 3 to Dormitory 5"
+  },
+  "R6": {
+    "name_th": "ถนนด้านหลังจากหอพัก 5 - อาคารนันทนาการ - ประตู 3",
+    "name_en": "Dormitory 5 – Recreation – Gate 3"
+  },
+  "CF": {
+    "name_th": "สนามเกาะกลาง ระหว่างอาคารศาลาประชาคม และ อาคารศูนย์การเรียนรู้",
+    "name_en": "Center Field"
+  },
+  "DA": {
+    "name_th": "พื้นที่สวนบริเวณองค์พระ ( ติดหอพัก 5 )",
+    "name_en": "Dormitory 5 - Dormitory 4 Area"
+  },
+  "SU": {
+    "name_th": "พื้นที่พัฒนาเป็นสวนยั่งยืน ( ตรงข้ามอาคารพรีคลินิก )",
+    "name_en": "Sustainable Zone"
+  },
+  "KD": {
+    "name_th": "พื้นที่บริจาค คุณหญิงกานดา ( ติดอาคารโรงพยาบาลฝั่งทิศเหนือ )",
+    "name_en": "Kanda Donation Area"
+  },
+  "CB": {
+    "name_th": "พื้นที่คันคลองรอบสถาบันการแพทย์จักรีนฤบดินทร์",
+    "name_en": "Canal Bank"
+  }
+}
