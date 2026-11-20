@@ -1,8 +1,8 @@
 {
   "unit": "tCO2e",
   "total_ton": 77.888681,
-  "measured_trees": 818,
-  "missing_trees": 87,
+  "measured_trees": 519,
+  "missing_trees": 386,
   "total_trees": 905,
   "by_area": [
     {
@@ -67,5 +67,5 @@
     }
   ],
   "source": "CNMI Tree Master / Tree / CO2e_Total_ton",
-  "note": "Sum of available CO2e values only; not a complete campus carbon inventory."
+  "note": "Measured count from original 05-CNMI_Tree Summary!B3 (COUNT_TREES_DONE); CO2e total from Summary!C3. Area values from Master."
 }
