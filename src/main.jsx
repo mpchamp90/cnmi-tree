@@ -43,10 +43,10 @@ function App(){
   {page==='dashboard'&&<>
    <div className="page-heading"><div><h2>ภาพรวมทะเบียนต้นไม้</h2><p>ข้อมูลสรุปจากชุดข้อมูลที่อนุญาตให้เผยแพร่</p></div><span className="status-tag">● Public dashboard</span></div>
    <section className="kpi-grid">
-    <article className="kpi"><span className="kpi-icon">🌳</span><span>จำนวนต้นไม้ในชุดเผยแพร่</span><strong>{fmt(trees.length)}</strong><small>ต้น</small></article>
-    <article className="kpi"><span className="kpi-icon">☑</span><span>พื้นที่ที่มีข้อมูล</span><strong>{fmt(areas)}</strong><small>พื้นที่</small></article>
-    <article className="kpi"><span className="kpi-icon">⌖</span><span>ปริมาณ CO₂e รวมที่คำนวณแล้ว</span><strong>{carbon?carbon.total_ton.toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2}):"—"}</strong><small>tCO₂e · {carbon?fmt(carbon.measured_trees)+" ต้น":"รอข้อมูล"}</small></article>
-    <article className="kpi"><span className="kpi-icon">🌿</span><span>ชนิดต้นไม้ที่บันทึก</span><strong>{fmt(new Set(trees.map(t=>t.species).filter(Boolean)).size)}</strong><small>ชนิด</small></article>
+    <article className="kpi"><span className="kpi-label">จำนวนต้นไม้ในชุดเผยแพร่</span><strong>{fmt(trees.length)}</strong><small>ต้น</small></article>
+    <article className="kpi"><span className="kpi-label">พื้นที่ที่มีข้อมูล</span><strong>{fmt(areas)}</strong><small>พื้นที่</small></article>
+    <article className="kpi"><span className="kpi-label">ปริมาณ CO₂e รวมที่คำนวณแล้ว</span><strong>{carbon?carbon.total_ton.toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2}):"—"}</strong><small>tCO₂e · {carbon?fmt(carbon.measured_trees)+" ต้น":"รอข้อมูล"}</small></article>
+    <article className="kpi"><span className="kpi-label">ชนิดต้นไม้ที่บันทึก</span><strong>{fmt(new Set(trees.map(t=>t.species).filter(Boolean)).size)}</strong><small>ชนิด</small></article>
    </section>
    <section className="dashboard-grid">
     <article className="panel"><div className="panel-title"><h3>🌿 จำนวนต้นไม้ตามชนิด (Top 8)</h3><span>ข้อมูลจริง</span></div>{speciesCount.length?<div className="bars">{speciesCount.map(([name,n])=><div className="bar-row" key={name}><span title={name}>{name}</span><div className="bar-track"><div style={{width:(n/speciesCount[0][1]*100)+'%'}} /></div><b>{fmt(n)}</b></div>)}</div>:<Empty icon="🌱" title="ยังไม่มีข้อมูลชนิดต้นไม้" desc="รอเชื่อมชุดข้อมูลที่อนุญาตให้เผยแพร่จาก CNMI Tree Master" />}</article>
