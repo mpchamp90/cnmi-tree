@@ -1,0 +1,71 @@
+{
+  "unit": "tCO2e",
+  "total_ton": 77.888681,
+  "measured_trees": 818,
+  "missing_trees": 87,
+  "total_trees": 905,
+  "by_area": [
+    {
+      "area_id": "R1",
+      "ton": 18.653916
+    },
+    {
+      "area_id": "HP",
+      "ton": 15.513273
+    },
+    {
+      "area_id": "RC",
+      "ton": 11.970282
+    },
+    {
+      "area_id": "R6",
+      "ton": 11.245171
+    },
+    {
+      "area_id": "LC",
+      "ton": 8.07448
+    },
+    {
+      "area_id": "R2",
+      "ton": 6.875918
+    },
+    {
+      "area_id": "R5",
+      "ton": 2.470603
+    },
+    {
+      "area_id": "DA",
+      "ton": 1.873213
+    },
+    {
+      "area_id": "CB",
+      "ton": 0.946752
+    },
+    {
+      "area_id": "R4",
+      "ton": 0.221812
+    },
+    {
+      "area_id": "D1",
+      "ton": 0.043259
+    },
+    {
+      "area_id": "CC",
+      "ton": 0
+    },
+    {
+      "area_id": "D5",
+      "ton": 0
+    },
+    {
+      "area_id": "PK",
+      "ton": 0
+    },
+    {
+      "area_id": "R3",
+      "ton": 0
+    }
+  ],
+  "source": "CNMI Tree Master / Tree / CO2e_Total_ton",
+  "note": "Sum of available CO2e values only; not a complete campus carbon inventory."
+}
