@@ -38,3 +38,17 @@
 .public-activity-item>.tree-photo-gallery img{height:145px}
 .public-activity-item>.text-action{display:block;margin-top:6px;font-size:13px}
 @media(max-width:700px){.activity-meta{align-items:flex-start;flex-direction:column;gap:2px}.public-activity-item{padding:13px}}
+
+/* Public activity index */
+.activity-page .panel-title{margin-bottom:10px}
+.activity-page-intro{color:#60776a;font-size:14px;margin:0 0 18px}
+.activity-index{display:flex;flex-direction:column;gap:12px}
+.activity-index-item{width:100%;display:flex;align-items:center;justify-content:space-between;gap:18px;text-align:left;padding:16px 18px;background:#fbfdfb;border:1px solid #dce8df;border-radius:12px;color:inherit;cursor:pointer;font:inherit;transition:background .15s,border-color .15s}
+.activity-index-item:not(:disabled):hover,.activity-index-item:not(:disabled):focus-visible{background:#f0f8f1;border-color:#6eaa84}
+.activity-index-item:disabled{cursor:default;opacity:.7}
+.activity-index-content{flex:1;min-width:0}
+.activity-index-tree{font-size:13px;color:#52705c;margin:4px 0 8px}
+.activity-index-content p{margin:0 0 10px;font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.activity-index-link{font-size:13px;color:#176747;font-weight:600}
+.activity-index-image{width:112px;height:100px;object-fit:cover;border-radius:9px;flex-shrink:0}
+@media(max-width:600px){.activity-index-item{padding:12px;gap:10px}.activity-index-image{width:76px;height:82px}.activity-index-item .activity-meta{gap:2px}}
