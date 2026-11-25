@@ -48,7 +48,7 @@ function App(){
  </aside>
  {menuOpen&&<button className="overlay" aria-label="ปิดเมนู" onClick={()=>setMenuOpen(false)} />}
  <div className="workspace">
-  <header className="topbar"><button className="hamburger" onClick={()=>setMenuOpen(true)} aria-label="เปิดเมนู">☰</button><div className="top-title"><span className="leaf-mark">🌿</span><div><div className="title-line"><h1>CNMI Tree</h1></div><p>สถาบันการแพทย์จักรีนฤบดินทร์</p></div></div><button className="sync" onClick={()=>setRefreshToken(v=>v+1)} title="ตรวจข้อมูลล่าสุด"><span>↻</span><div>{liveStatus.mode==='live'?'ข้อมูลอัปเดตอัตโนมัติ':liveStatus.mode==='stale'?'ข้อมูลล่าสุดที่โหลดสำเร็จ':'ข้อมูลชุดสำรอง'}<small>{liveStatus.updatedAt?'ข้อมูล ณ '+new Date(liveStatus.updatedAt).toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'}):'ยังไม่เชื่อม API สด · กดเพื่อตรวจใหม่'}</small></div></button></header>
+  <header className="topbar"><button className="hamburger" onClick={()=>setMenuOpen(true)} aria-label="เปิดเมนู">☰</button><div className="top-title"><span className="leaf-mark">🌿</span><div><div className="title-line"><h1>CNMI Tree</h1></div><p>งานบริหารสิ่งแวดล้อม · สถาบันการแพทย์จักรีนฤบดินทร์</p></div></div><button className="sync" onClick={()=>setRefreshToken(v=>v+1)} title="ตรวจข้อมูลล่าสุด"><span>↻</span><div>{liveStatus.mode==='live'?'ข้อมูลอัปเดตอัตโนมัติ':liveStatus.mode==='stale'?'ข้อมูลล่าสุดที่โหลดสำเร็จ':'ข้อมูลชุดสำรอง'}<small>{liveStatus.updatedAt?'ข้อมูล ณ '+new Date(liveStatus.updatedAt).toLocaleString('th-TH',{dateStyle:'short',timeStyle:'short'}):'ยังไม่เชื่อม API สด · กดเพื่อตรวจใหม่'}</small></div></button></header>
   <main className="content">
   {error&&<div className="error">{error}</div>}
   {page==='dashboard'&&<>
