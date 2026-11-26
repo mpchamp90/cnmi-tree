@@ -1,4 +1,5 @@
 name: Deploy CNMI Tree to GitHub Pages
+# Fresh workflow run to avoid duplicate artifacts in the previous run.
 
 on:
   push:
